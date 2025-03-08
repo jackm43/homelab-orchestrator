@@ -1,0 +1,7 @@
+*all.yml
+*hosts.yml
+**/templates/Caddyfile.j2
+*/.terraform
+*.hcl
+terraform/terraform.tfvars
+*tfstate*

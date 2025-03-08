@@ -1,0 +1,38 @@
+{
+        admin localhost:2019
+}
+# Global SSL config
+*.{{ domain_name }} {
+        tls /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem /etc/letsencrypt/live/{{ domain_name }}/privkey.pem
+}
+# AdGuard
+adguard.{{ domain_name }} {
+        reverse_proxy 192.168.1.83:800
+}
+# Proxmox
+proxmox.{{ domain_name }} {
+        @websockets {
+                header Connection *Upgrade*
+                header Upgrade websocket
+        }
+        reverse_proxy @websockets 192.168.1.240:8006 {
+                transport http {
+                        tls_insecure_skip_verify
+                }
+        }
+        reverse_proxy 192.168.1.240:8006 {
+                transport http {
+                        tls_insecure_skip_verify
+                }
+        }
+}
+
+search.{{ domain_name }} {
+        reverse_proxy /* 192.168.1.98:8000 {
+                transport http {
+                        response_header_timeout 5m
+                        read_timeout 5m
+                        write_timeout 5m
+                }
+        }
+}

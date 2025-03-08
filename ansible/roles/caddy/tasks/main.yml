@@ -1,0 +1,68 @@
+- name: Update apt cache
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install required packages
+  apt:
+    name:
+      - curl
+      - apt-transport-https
+      - debian-keyring
+      - debian-archive-keyring
+      - gnupg
+    state: present
+
+- name: Add Caddy GPG key
+  apt_key:
+    url: https://dl.cloudsmith.io/public/caddy/stable/gpg.key
+    state: present
+
+- name: Add Caddy repository
+  apt_repository:
+    repo: deb [arch=amd64 signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/deb/debian any-version main
+    state: present
+    filename: caddy-stable
+
+- name: Install Caddy
+  apt:
+    name: caddy
+    state: present
+
+- name: Create Let's Encrypt directory structure
+  file:
+    path: "/etc/letsencrypt/live/{{ domain_name }}"
+    state: directory
+    mode: '0755'
+
+# In production, you would use certbot or other means to get actual certificates
+# This is a placeholder for demo purposes
+- name: Copy SSL certificates
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: '0644'
+  with_items:
+    - { src: "ssl/fullchain.pem", dest: "/etc/letsencrypt/live/{{ domain_name }}/fullchain.pem" }
+    - { src: "ssl/privkey.pem", dest: "/etc/letsencrypt/live/{{ domain_name }}/privkey.pem" }
+  when: false  # Disabled in this example
+
+- name: Create Caddy config
+  template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Caddy
+
+- name: Ensure Caddy is running and enabled
+  systemd:
+    name: caddy
+    state: started
+    enabled: yes
+
+- name: Restart Caddy
+  systemd:
+    name: caddy
+    state: restarted

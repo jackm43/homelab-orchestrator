@@ -1,0 +1,6 @@
+ansible_ssh_private_key_file: ~/.ssh/id_rsa
+ansible_user: root
+ansible_become: yes
+
+# Domain settings
+domain_name: domain.me

@@ -1,0 +1,6 @@
+- name: Configure Caddy LXC
+  hosts: caddy
+  gather_facts: yes
+  become: yes
+  roles:
+    - caddy
