@@ -3,5 +3,6 @@
 **/templates/Caddyfile.j2
 */.terraform
 *.hcl
-terraform/terraform.tfvars
+terraform/modules/*/variables.tfvars
 *tfstate*
+*.terraform
