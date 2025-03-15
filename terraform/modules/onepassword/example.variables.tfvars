@@ -1,5 +1,5 @@
-op_account = "your-account-here_uuid"
-token = "your-token-here"
+op_account  = "your-account-here_uuid"
+token       = "your-token-here"
 connect_url = "http://192.168.1.182:8080"
 op_cli_path = "/usr/bin/op"
 vaults = {
