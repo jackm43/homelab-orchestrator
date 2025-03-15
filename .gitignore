@@ -7,3 +7,4 @@ terraform/modules/*/variables.tfvars
 *tfstate*
 *.terraform
 terraform/terraform.tfvars
+**venv**
