@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "up-bank-pyclient"
+version = "0.1.0"
+description = "Python client library for the UP Bank API"
+authors = [
+    {name = "Jack Munro", email = "jack@jsmunro.me"}
+]
+license = { text = "GPL-3.0-or-later" }
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.25.0",
+    "pydantic>=2.0.0",
+    "fastapi>=0.110.0",
+    "uvicorn>=0.27.0",
+    "dotenv>=0.9.9",
+    "questionary>=2.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=22.0.0",
+    "isort>=5.0.0",
+    "mypy>=1.0.0",
+    "python-dotenv>=0.9.9"
+]
