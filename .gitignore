@@ -8,3 +8,4 @@ terraform/modules/*/variables.tfvars
 *.terraform
 terraform/terraform.tfvars
 **venv**
+**__pycache__**
