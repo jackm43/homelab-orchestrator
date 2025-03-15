@@ -1,3 +1,7 @@
+############################################################################################################
+# Proxmox Variables
+############################################################################################################
+
 variable "proxmox_api_url" {
   description = "The URL of Proxmox API (https://{domain}/api2/json)"
   type        = string
@@ -42,13 +46,127 @@ variable "lxc_containers" {
   }))
 }
 
-variable "lxc_templates" {
-  description = "List of available LXC templates with friendly names"
-  type = map(string)
-  default = {
-    "debian_12"   = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst",
-    "debian_11"   = "local:vztmpl/debian-11-standard_11.7-1_amd64.tar.zst",
-    "alpine_321"  = "local:vztmpl/alpine-3.21-default_20241217_amd64.tar.xz",
-    "alpine_319"  = "local:vztmpl/alpine-3.19-default_20240207_amd64.tar.xz"
-  }
+
+############################################################################################################
+# OnePassword Variables
+############################################################################################################
+
+variable "op_cli_path" {
+  description = "Path to the 1Password CLI"
+  type        = string
+  default     = "/usr/local/bin/op"
+}
+
+variable "op_account" {
+  description = "1Password account details"
+  type        = string
+}
+
+variable "token" {
+  description = "1Password service account token"
+  type        = string
+  sensitive   = true
+}
+
+variable "connect_url" {
+  description = "1Password Connect server URL"
+  type        = string
+}
+
+variable "vaults" {
+  description = "Map of 1Password vaults to import"
+  type = map(object({
+    uuid = string
+    name = string
+  }))
+}
+
+variable "should_import_items" {
+  description = "Whether to import items from 1Password"
+  type        = bool
+  default     = true
+}
+
+variable "force_reimport" {
+  description = "Whether to force reimport of items from 1Password"
+  type        = bool
+  default     = false
+}
+
+
+variable "items" {
+  description = "Map of 1Password items to manage"
+  type = map(object({
+    title    = string
+    vault    = string
+    category = optional(string)
+    username = optional(string)
+    password = optional(string)
+    url      = optional(string)
+    tags     = optional(list(string))
+    sections = optional(list(object({
+      label = string
+      fields = optional(list(object({
+        label    = string
+        type     = optional(string)
+        purpose  = optional(string)
+        value    = optional(string)
+      })))
+    })))
+  }))
+  default = {}
+}
+
+variable "ssh_public_key" {
+  description = "SSH public key for Proxmox"
+  type        = string
+  default     = null
+}
+
+
+
+############################################################################################################
+# Cloudflare Variables
+############################################################################################################
+
+variable "cloudflare_api_token" {
+  description = "Cloudflare API token"
+  type        = string
+  sensitive   = true
+  default     = null
+}
+
+variable "zones" {
+  description = "Map of Cloudflare zones to create"
+  type = map(object({
+    zone_id = string
+    name    = string
+  }))
+}
+
+variable "records" {
+  description = "Map of Cloudflare records to create"
+  type = map(object({
+    zone_id = string
+    name    = string
+    type    = string
+  }))
+}
+
+############################################################################################################
+# Caddy Variables
+############################################################################################################
+
+variable "sites" {
+  description = "List of sites to proxy"
+  type = list(object({
+    domain   = string
+    upstream = string
+  }))
+}
+
+variable "caddy_config_path" {
+  description = "Path to the Caddy config file"
+  type        = string
+  default     = "/etc/caddy/Caddyfile"
 }
