@@ -1,0 +1,35 @@
+services:
+  immich-machine-learning:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:${IMMICH_VERSION:-release}-cuda
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities:
+                - gpu
+    ports:
+      - "3003:3003"
+    networks:
+      - immich-net
+    volumes:
+      - model-cache:/cache
+      - vit-h-14-378-quickgelu:/models/clip
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  model-cache:
+  vit-h-14-378-quickgelu:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/chatting/projects/immich-ml/ViT-H-14-378-quickgelu__dfn5b
+
+networks:
+  immich-net:
+    driver: bridge
